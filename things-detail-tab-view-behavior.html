@@ -73,10 +73,12 @@ Things.DetailTabViewBahaviorImpl = {
     '_onResourceChanged(resource)',
   ],
 
-  listeners: {
-    'tabPages.iron-select': '_onPageSelected'
+  ready:function(){
+    var tabPages = this.$$('#tabPages');
+    if(tabPages){
+      this.listen(tabPages,'iron-select','_onPageSelected');  
+    }
   },
-
   /**
    * Resource가 변경되었을 경우 
    *
