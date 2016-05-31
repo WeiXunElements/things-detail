@@ -1,0 +1,209 @@
+<link rel="import" href="../../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../../bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="../../../../bower_components/things-ajax/things-ajax.html">
+<link rel="import" href="../../../../bower_components/things-grid/things-resource-grid.html">
+<link rel="import" href="../../../../bower_components/things-msg-box-behavior/things-msg-box-behavior.html">
+<link rel="import" href="../../../../bower_components/things-resource-selector/things-resource-selector-behavior.html">
+<link rel="import" href="../../../../bower_components/things-view-open-behavior/things-view-open-behavior.html">
+
+<!--
+Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 그리드 뷰 
+-->
+
+<dom-module id="things-menu-detail-grid">
+  <template>
+    <style>
+      :host {
+        display:block;
+        @apply(--layout-vertical);
+      }
+      things-resource-grid {
+        @apply(--layout-flex);
+      }
+    </style>
+
+    <things-ajax
+      auto
+      id="grid-ajax"
+      method="GET"
+      resource-id="[[resourceId]]"
+      resource-url="[[searchUrl]]">
+    </things-ajax>
+
+    <things-resource-grid 
+      id="grid"
+      config="[[gridConfig]]"
+      model="[[gridModel]]" 
+      columns="[[gridColumns]]"
+      grid-save-action="[[gridSaveUrl]]"
+      data="[[detailItems]]"
+      fixed-column-count="2"
+      buttons="[[buttons]]">
+    </things-resource-grid>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'things-menu-detail-grid',
+
+      behaviors: [
+        Things.ResourceSelectorBehavior,
+        Things.MsgBoxBehavior,
+        Things.ViewOpenBehavior
+      ],
+
+      properties: {
+        /**
+         * Resource Id
+         */
+        resourceId: {
+          type: String
+        },
+
+        /**
+         * Resource Data
+         */
+        resource: {
+          type: Object
+        },
+
+        /**
+         * Grid Search URL
+         */
+        searchUrl: {
+          type: String
+        },
+
+        /**
+         * Grid Save URL
+         * ':id'가 들어 있는지 체크하여 ':id' 값이 들어가 있으면 resourceId로 교체하여 computed된다.
+         * 실제 Grid로 넘어갈 Save URL은 gridSaveUrl이다.
+         */
+        saveUrl: {
+          type: String
+        },
+
+        /**
+         * Grid Save URL
+         */
+        gridSaveUrl: {
+          type: String,
+          computed: '_computeGridSaveUrl(saveUrl)'
+        },
+
+        /**
+         * Master Reference Field Name
+         */
+        masterField: {
+          type: String
+        },
+
+        /**
+         * Data Property
+         */
+        dataProp: {
+          type: String
+        },        
+
+        /**
+         * Grid Model
+         */
+        gridModel: {
+          type: Array
+        },
+        
+        /**
+         * Grid Columns
+         */
+        gridColumns: {
+          type: Array
+        },
+
+        /**
+         * 버튼 정보 
+         */
+        buttons: {
+          type: Array,
+          value: []
+        },
+
+        /**
+         * Detail Data List
+         */
+        detailItems: {
+          type: Array,
+          notify: true
+        }
+      },
+
+      listeners: {
+        'grid-ajax.things-ajax-response' : '_responseDetails',
+        'grid.things-grid-save-success' : '_responseDetails',
+        'grid.things-grid-handle-addrow' : '_addGridRow',
+        'grid.things-grid-handle-built-writedata' : '_setupWriteData'
+      },
+
+      /**
+       * Resize 
+       *
+       * @param {Object} e
+       */
+      _resizeView: function(e) {
+        this.$.grid.resizeGrid();
+      },
+
+      /**
+       * Save URL이 변경시 Grid Save URL을 생성
+       *
+       * @param {String} saveUrl
+       */
+      _computeGridSaveUrl: function(saveUrl) {
+        return saveUrl.replace(':id', this.resourceId);
+      },
+
+      /**
+       * Grid Data가 변경되었을 경우 
+       *
+       * @param {Object} gridData
+       */
+      _responseDetails: function(e) {
+        this.detailItems = e.detail;
+      },
+
+      /**
+       * Grid에서 Add Row시 핸들링
+       *
+       * @param {Object} event
+       */
+      _addGridRow: function(event) {
+        event.preventDefault();
+        var emptyRow = {}; emptyRow[this.masterField] = this.resourceId;
+        this.$.grid.dataSet.insertRow(0, emptyRow);
+      },
+
+      /**
+       * Grid에서 업데이트할 writeData 셋업이 완료된 후 writeData 조작
+       *
+       * @param {Object} event
+       */
+      _setupWriteData: function(event) {
+        var writeData = event.detail;
+        if(writeData && writeData.length > 0) {
+          var masterId = this.resourceId;
+          var masterField = this.masterField;
+
+          writeData.forEach(function(changedData) {
+            changedData[masterField] = masterId;
+            delete changedData['creator'];
+            delete changedData['updater'];
+            delete changedData['created_at'];
+            delete changedData['updated_at'];
+          });
+        }
+      }      
+
+    });
+  </script>
+</dom-module>

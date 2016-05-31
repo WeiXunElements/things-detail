@@ -1,0 +1,287 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+<link rel="import" href="../things-meta/things-menu-detail-meta-behavior.html">
+<link rel="import" href="./things-menu-detail-master-form.html">
+<link rel="import" href="./things-menu-detail-form.html">
+<link rel="import" href="./things-menu-detail-grid.html">
+
+<!--
+Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Manager를 이용하여 표시하는 Opener.
+보통은 화면의 마스터 그리드에서 특정 레코드를 선택한 경우 이벤트를 발생하여 resource-detail 화면을 오픈한다.
+
+@demo demo/index.html
+-->
+
+<dom-module id="things-resource-detail-opener">
+  <style>
+    :host {
+      display: inline-block;
+      @apply(--layout-vertical)
+    }
+    paper-toolbar {
+      background-color:var(--things-primary-background-color);
+      height: 45px;
+      margin-top: 0px !important;
+      @apply(--things-padding-clear)
+    }
+    paper-toolbar::shadow #topBar {
+      height:45px;
+      @apply(--things-padding-clear)
+    }
+    paper-dialog {
+      position: fixed;
+      top: 10%;
+      bottom: 10%;
+      left: 15%;
+      right: 15%;
+      margin: 0px;
+      @apply(--layout-flex);
+      @apply(--layout-vertical);
+    }
+    .buttonsGroup {
+      @apply(--layout-horizontal);
+      @apply(--layout-end-justified);
+      @apply(--layout-flex);
+    }
+    .scrollroot {
+      @apply(--layout-flex);
+      @apply(--layout-vertical);
+      @apply(--things-padding-clear);
+      @apply(--things-margin-clear);
+    }
+    .scrollroot::content #detail-view {
+      @apply(--layout-flex);
+    }
+    .title {
+      margin-left:20px !important;
+      font-size:20px;
+      font-weight:400;
+    }
+    .close-btn {
+      @apply(--things-header-button);
+      background: url(/images/icon-close.png) 100% 50% no-repeat;
+      margin-right: 10px;
+    }
+    button:focus {
+      outline:none;
+    }
+  </style>
+
+  <template>
+    <things-ajax 
+      id="meta"
+      last-response="{{metaData}}">
+    </things-ajax>
+
+    <paper-dialog
+      id='dialog' 
+      entry-animation="scale-up-animation"
+      exit-animation="fade-out-animation">
+      <paper-toolbar>
+        <span class="title">[[title]]</span>
+        <div class="buttonsGroup">
+            <button dialog-dismiss class="close-btn"></button>
+        </div>
+      </paper-toolbar>
+
+      <div id="scrollroot" class="scrollroot">
+      </div>
+    </paper-dialog>
+  </template>
+
+  <script>
+  Polymer({
+
+    is: 'things-resource-detail-opener',
+
+    properties: {
+      /**
+       * 다이얼로그 타이틀
+       */
+      title: {
+        type: String
+      },
+
+      /**
+       * 메뉴 정보 
+       */
+      menuInfo: {
+        type: Object
+      },
+
+      /**
+       * 디테일 리소스 
+       */
+      resource: {
+        type: Object
+      },
+
+      /**
+       * 디테일 폼 필드 
+       */
+      resourceFormFields: {
+        type: Array
+      },
+
+      /**
+      * Dialog 내에 포함될 뷰 
+      */
+      detailView: {
+        type: Object
+      },
+
+      /**
+       * Dialog가 오픈된 후 콜백 
+       */
+      openCallback: {
+        type: Function
+      }
+    },
+
+    behaviors: [ 
+      Things.MenuDetailMetaBehavior 
+    ],
+
+    listeners: {
+      'dialog.iron-overlay-opened' : '_openHandler',
+      'detail-meta-data-configured' : '_createDetailView'
+    },
+
+    /**
+     * Life Cycle
+     */
+    attached: function () {
+      document.addEventListener('things-open-menu-detail-view', function(event) {
+        this.initOpener(event);
+      }.bind(this));
+
+      document.addEventListener('things-close-menu-detail-view', function(event) {
+        this.closeDetailView();
+      }.bind(this));
+    },
+
+    /**
+     * Initialize Opener
+     *
+     * @param {Object} event
+     */
+    initOpener: function(event) {
+      this.menuInfo = event.detail.menuInfo;
+      this.resourceFormFields = event.detail.resourceFormFields;
+      this.menuId = this.menuInfo.id;
+      this.resource = event.detail.resource;
+      this.title = this.resource[this.menuInfo.title_field];
+      var url = this._computeMenuDetailMetaUrl(this.menuId);
+      this.$.meta.resourceUrl = url;
+      this.$.meta.resourceId = this.menuId;
+      this.$.meta.generateRequest(); 
+    },
+
+    /**
+     * 메타 데이터가 구성된 이후 Detail View를 구성한다.
+     * 
+     * @param {Object} event
+     */
+    _createDetailView: function() {
+      var viewElement = document.createElement(this.menuInfo.detail_layout);
+      viewElement.id = 'detail-view';
+      if(!this.metaData) return;
+      var children = {};
+
+      for(var i = 0 ; i < this.metaData.length ; i++) {
+        var meta = this.metaData[i];
+        var detailElement = null;
+
+        if(meta.association == 'master') {
+          detailElement = document.createElement('things-menu-detail-master-form');
+          detailElement.buttons = this.buttonMetas[meta.view_section];
+          detailElement.formFields = this.resourceFormFields;
+
+        } else if(meta.association == 'one-to-one') {
+          detailElement = document.createElement('things-menu-detail-form');
+          detailElement.buttons = this.buttonMetas[meta.view_section];
+          detailElement.formFields = this.formMetas[meta.view_section];
+
+        } else if(meta.association == 'one-to-many') {
+          detailElement = document.createElement('things-menu-detail-grid');
+          detailElement.buttons = this.buttonMetas[meta.view_section];
+          detailElement.gridModel = this.gridModelMetas[meta.view_section];
+          detailElement.gridColumns = this.gridModelMetas[meta.view_section];
+
+        } else if(meta.association == 'custom') {
+          // TODO 커스텀인 경우 별도의 화면 URL을 받는다.
+          continue;
+        }
+
+        detailElement.id = 'view-' + meta.view_section;
+        detailElement.title = meta.name;
+        detailElement.resourceId = this.resource.id;
+        detailElement.resource = this.resource;
+        detailElement.masterField = meta.master_field;
+        detailElement.searchUrl = meta.search_url;
+        detailElement.saveUrl = meta.save_url;
+        detailElement.dataProp = meta.data_prop;
+        children[meta.view_section] = detailElement;
+      }
+
+      viewElement.sections = children;
+      this.openDetailView(viewElement, true, null);
+    },
+
+    /**
+     * View를 기본적인 다이얼로그 내에 오픈한다.
+     *
+     * @param {Object} view 오픈할 view
+     * @param {Boolean} modal modal로 오픈할 지 여부
+     * @param {Object} openCallback
+     */
+    openDetailView: function(view, modal, openCallback) {
+      var dialog = this.$.dialog;
+      dialog.modal = modal;
+      dialog.noCancelOnEscKey = false;
+      var scrollable = this.$.scrollroot;
+
+      if(this.detailView) {
+        try {
+          scrollable.removeChild(this.detailView);
+        } catch(e) {
+          console.log(e);
+        }
+      } 
+
+      if(this.openCallback) {
+        this.openCallback = null;
+      }
+      
+      this.detailView = view;
+      this.openCallback = openCallback;
+      scrollable.appendChild(this.detailView);
+      dialog.open();
+    },
+
+    /**
+     * View를 기본적인 다이얼로그 내에 닫는다.
+     */
+    closeDetailView: function() {
+      this.$.dialog.close();
+    },
+
+    /**
+     * 다이얼로그가 오픈된 경우 핸들러 
+     */
+    _openHandler: function(e) {
+      if(this.openCallback) {
+        this.openCallback.apply(this.detailView);
+      }
+    }
+
+  });
+  </script>
+
+</dom-module>
