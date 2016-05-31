@@ -212,7 +212,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
           detailElement = document.createElement('things-menu-detail-grid');
           detailElement.buttons = this.buttonMetas[meta.view_section];
           detailElement.gridModel = this.gridModelMetas[meta.view_section];
-          detailElement.gridColumns = this.gridModelMetas[meta.view_section];
+          detailElement.gridColumns = this.gridColumnMetas[meta.view_section];
 
         } else if(meta.association == 'custom') {
           // TODO 커스텀인 경우 별도의 화면 URL을 받는다.
