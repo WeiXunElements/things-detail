@@ -23,22 +23,12 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 �
       }
     </style>
 
-    <things-ajax
-      auto
-      id="form-ajax"
-      method="GET"
-      resource-id="[[resourceId]]"
-      resource-url="[[searchUrl]]"
-      last-response="[[resource]]">
-    </things-ajax>
-
     <things-resource-form 
       id="form"
-      title="[[title]]"
       form-fields="[[formFields]]"
       remove-fields-on-save="[[removeFieldsOnSave]]"
       resource-id="[[resourceId]]"
-      resource="[[resource]]"
+      resource="[[detailData]]"
       resource-url="[[saveUrl]]">
     </things-resource-form>
   </template>
@@ -56,7 +46,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 �
 
       properties: {
         /**
-         * Detail Title
+         * Title
          */
         title: {
           type: String
@@ -70,10 +60,17 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 �
         },
 
         /**
-         * Resource Data
+         * Resource Detail
          */
-        resource: {
+        detailData: {
           type: Object
+        },
+
+        /**
+         * Detail에서 Master Entity를 참조하는 필드명 
+         */
+        masterField: {
+          type: String
         },
 
         /**
@@ -85,7 +82,6 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 �
 
         /**
          * 외부에서 설정할 Form Save URL
-         * ':id'가 포함되어 있으면 _computeFormSaveUrl를 통해서 '/:id'가 resourceId로 대치되면서 formSaveUrl로 설정된다.
          */
         saveUrl: {
           type: String
@@ -106,13 +102,37 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 �
         }
       },
 
+      listeners: {
+        'form.things-form-handle-url-before-save' : '_beforeSaveDetail',
+        'form.things-form-handle-url-before-get' : '_beforeGetDetail'
+      },
+
       /**
-       * saveUrl이 변경되었을 경우  
+       * Detail 데이터 조회 이전에 URL을 Override.
        *
-       * @param {String} saveUrl
+       * @param {Object} event
        */
-      _computeFormSaveUrl: function(saveUrl) {
-        return saveUrl.replace(':id', this.resourceId);
+      _beforeGetDetail: function(event) {
+        event.preventDefault();
+
+        var getAjax = event.detail;
+        getAjax.resourceId = this.resourceId;
+        getAjax.resourceUrl = this.searchUrl;
+        getAjax.resourceAction = 'find';
+      },
+
+      /**
+       * Detail 데이터 저장 이전에 URL을 Override.
+       *
+       * @param {Object} event
+       */
+      _beforeSaveDetail: function(event) {
+        event.preventDefault();
+
+        var saveAjax = event.detail;
+        saveAjax.resourceId = this.resourceId;
+        saveAjax.resourceUrl = this.saveUrl;
+        saveAjax.resourceAction = 'update';
       }
 
     });

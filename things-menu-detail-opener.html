@@ -207,6 +207,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
         if(meta.association == 'master') {
           detailElement = document.createElement('things-menu-detail-master-form');
           detailElement.formFields = this.resourceFormFields;
+          detailElement.resource = this.resource;
 
         } else if(meta.association == 'one-to-one') {
           if(!detailElement)
@@ -228,7 +229,6 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
         detailElement.id = 'view-' + meta.view_section;
         detailElement.title = meta.name;
         detailElement.resourceId = this.resource.id;
-        detailElement.resource = this.resource;
         detailElement.masterField = meta.master_field;
         detailElement.searchUrl = meta.search_url;
         detailElement.saveUrl = meta.save_url;
