@@ -142,7 +142,8 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
         'grid-ajax.things-ajax-response' : '_responseDetails',
         'grid.things-grid-save-success' : '_responseDetails',
         'grid.things-grid-handle-addrow' : '_addGridRow',
-        'grid.things-grid-handle-built-writedata' : '_setupWriteData'
+        'grid.things-grid-handle-built-writedata' : '_setupWriteData',
+        'grid.things-grid-resource-column-edit' : 'openResourceSelector'
       },
 
       /**
@@ -202,7 +203,19 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
             delete changedData['updated_at'];
           });
         }
-      }      
+      },
+
+      /**
+      * Open Resource Selector Dialog
+      *
+      * @param {Object} event
+      */
+      openResourceSelector: function(event) {
+        var index = event.detail.index;
+        var grid = index._grid;
+        grid.commit();
+        this.openResourceSelectorByGrid(index._grid, index.rowIndex, event.detail.userObj, true);
+      },
 
     });
   </script>

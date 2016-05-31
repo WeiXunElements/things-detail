@@ -222,7 +222,9 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
           detailElement.gridColumns = this.gridColumnMetas[meta.view_section];
         }
 
-        detailElement.buttons = this.buttonMetas[meta.view_section];
+        if(this.buttonMetas && this.buttonMetas[meta.view_section])
+          detailElement.buttons = this.buttonMetas[meta.view_section];
+
         detailElement.id = 'view-' + meta.view_section;
         detailElement.title = meta.name;
         detailElement.resourceId = this.resource.id;
