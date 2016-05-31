@@ -198,27 +198,31 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
         var meta = this.metaData[i];
         var detailElement = null;
 
+        // 1. Custom View를 사용할 경우 
+        if(meta.custom_view && meta.custom_view.length > 2) {
+          detailElement = document.createElement(meta.custom_view);
+        }
+
+        // 2. Association에 따라서 ...
         if(meta.association == 'master') {
           detailElement = document.createElement('things-menu-detail-master-form');
-          detailElement.buttons = this.buttonMetas[meta.view_section];
           detailElement.formFields = this.resourceFormFields;
 
         } else if(meta.association == 'one-to-one') {
-          detailElement = document.createElement('things-menu-detail-form');
-          detailElement.buttons = this.buttonMetas[meta.view_section];
+          if(!detailElement)
+            detailElement = document.createElement('things-menu-detail-form');
+
           detailElement.formFields = this.formMetas[meta.view_section];
 
         } else if(meta.association == 'one-to-many') {
-          detailElement = document.createElement('things-menu-detail-grid');
-          detailElement.buttons = this.buttonMetas[meta.view_section];
+          if(!detailElement)
+            detailElement = document.createElement('things-menu-detail-grid');
+
           detailElement.gridModel = this.gridModelMetas[meta.view_section];
           detailElement.gridColumns = this.gridColumnMetas[meta.view_section];
-
-        } else if(meta.association == 'custom') {
-          // TODO 커스텀인 경우 별도의 화면 URL을 받는다.
-          continue;
         }
 
+        detailElement.buttons = this.buttonMetas[meta.view_section];
         detailElement.id = 'view-' + meta.view_section;
         detailElement.title = meta.name;
         detailElement.resourceId = this.resource.id;
