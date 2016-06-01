@@ -1,0 +1,216 @@
+<link rel="import" href="../things-ajax/things-ajax.html">
+<link rel="import" href="../things-meta/things-menu-detail-meta-behavior.html">
+
+<link rel="import" href="./things-menu-detail-master-form.html">
+<link rel="import" href="./things-menu-detail-form.html">
+<link rel="import" href="./things-menu-detail-grid.html">
+
+<script>
+
+window.Things = window.Things || {};
+
+/**
+ * 메뉴 Detail 메타 정보로 부터 화면을 생성하는 Behavior
+ *
+ * @polymerBehavior Things.MenuDetailCreateBahavior
+ */
+Things.MenuDetailCreateBahaviorImpl = {
+  
+  properties: {
+    /**
+     * 다이얼로그 타이틀
+     */
+    title: {
+      type: String
+    },
+
+    /**
+     * 메뉴 정보 
+     */
+    menuInfo: {
+      type: Object,
+      observer: '_menuInfoChanged'
+    },
+
+    /**
+     * 디테일 폼 필드 
+     */
+    resourceFormFields: {
+      type: Array
+    },
+
+    /**
+     * 디테일 리소스 
+     */
+    resource: {
+      type: Object,
+      observer: '_resourceChanged'
+    },
+
+    /**
+     * Menu Detail View 
+     */
+    menuDetailView: {
+      type: Object
+    }
+  },
+
+  listeners: {
+    'detail-meta-data-configured' : '_createDetailView'
+  },
+
+  /**
+   * 메뉴 정보가 변경된 후 
+   * 
+   * @param {Object} menuInfo
+   */
+  _menuInfoChanged: function(menuInfo) {
+    if(menuInfo) {
+      this.menuId = menuInfo.id;
+      this.title = this.resource ? this.resource[menuInfo.title_field] : menuInfo.title;
+      this._createLayoutView();
+      this._invokeMetaData();
+    }
+  },
+
+  /**
+   * resource 정보가 변경된 후 
+   * 
+   * @param {Object} menuInfo
+   */
+  _resourceChanged: function(resource) {
+    this.resource = resource;
+    if(this.resource && this.menuInfo)
+      this.title = this.resource[this.menuInfo.title_field];
+  },
+
+  /**
+   * 메뉴 디테일 메타 정보 조회
+   */
+  _invokeMetaData: function() {
+    var metaInvoker = document.createElement('things-ajax');
+    metaInvoker.resourceId = this.menuId;
+    metaInvoker.resourceUrl = this.menuDetailMetaUrl;
+    var me = this;
+
+    metaInvoker.addEventListener('things-ajax-response', function(event) {
+      me.metaData = event.detail;
+    });
+
+    metaInvoker.generateRequest();
+  },
+
+  /**
+   * 메뉴에 설정된 Layout View로 Detail View를 생성한다.
+   */
+  _createLayoutView: function() {
+    this.menuDetailView = document.createElement(this.menuInfo.detail_layout);
+    this.menuDetailView.id = 'detail-view';
+  },
+
+  /**
+   * 메타 데이터가 구성된 이후 Detail View를 구성한다.
+   * 
+   * @param {Object} event
+   */
+  _createDetailView: function(event) {
+    var children = {};
+
+    for(var i = 0 ; i < this.metaData.length ; i++) {
+      var meta = this.metaData[i];
+      var sectionView = null;
+
+      // 1. Custom View를 사용할 경우 
+      if(meta.custom_view && meta.custom_view.length > 2) {
+        sectionView = document.createElement(meta.custom_view);
+      }
+
+      // 2. Association에 따라서 ...
+      if(meta.association == 'master') {
+        sectionView = this._createMasterForm(meta);
+
+      } else if(meta.association == 'one-to-one') {
+        sectionView = this._createDetailForm(sectionView, meta);
+
+      } else if(meta.association == 'one-to-many') {
+        sectionView = this._createDetailGrid(sectionView, meta);
+      }
+
+      children[meta.view_section] = sectionView;
+    }
+
+    this.menuDetailView.sections = children;
+    this.fire('things-detail-view-created', this.menuDetailView);
+  },
+
+  /**
+   * 마스터 폼을 생성한다.
+   * 
+   * @param {Object} meta
+   */
+  _createMasterForm: function(meta) {
+    var sectionView = document.createElement('things-menu-detail-master-form');
+    sectionView.formFields = this.resourceFormFields;
+    sectionView.resource = this.resource;
+    return this._setCommonDetailView(sectionView, meta);
+  },
+
+  /**
+   * 디테일 폼을 생성한다.
+   *
+   * @param {Object} sectionView 
+   * @param {Object} meta
+   */
+  _createDetailForm: function(sectionView, meta) {
+    if(!sectionView)
+      sectionView = document.createElement('things-menu-detail-form');
+
+    sectionView.formFields = this.formMetas[meta.view_section];
+    return this._setCommonDetailView(sectionView, meta);
+  },
+
+  /**
+   * 디테일 그리드를 생성한다.
+   *
+   * @param {Object} sectionView 
+   * @param {Object} meta
+   */
+  _createDetailGrid: function(sectionView, meta) {
+    if(!sectionView)
+      sectionView = document.createElement('things-menu-detail-grid');
+
+    sectionView.gridModel = this.gridModelMetas[meta.view_section];
+    sectionView.gridColumns = this.gridColumnMetas[meta.view_section];
+    return this._setCommonDetailView(sectionView, meta);
+  },
+
+  /**
+   * 마스터 폼, 디테일 폼, 그리드 공통 셋업을 설정한다.
+   *
+   * @param {Object} sectionView 
+   * @param {Object} meta
+   */
+  _setCommonDetailView: function(sectionView, meta) {
+    if(this.resource) 
+      sectionView.resourceId = this.resource.id;
+          
+    sectionView.id = 'view-' + meta.view_section;
+    sectionView.title = meta.name;
+    sectionView.masterField = meta.master_field;
+    sectionView.searchUrl = meta.search_url;
+    sectionView.saveUrl = meta.save_url;
+    sectionView.dataProp = meta.data_prop;
+
+    if(this.buttonMetas && this.buttonMetas[meta.view_section])
+      sectionView.buttons = this.buttonMetas[meta.view_section];
+
+    return sectionView;
+  }
+};
+
+Things.MenuDetailCreateBahavior = [
+  Things.MenuDetailCreateBahaviorImpl,
+  Things.MenuDetailMetaBehavior
+];
+
+</script>

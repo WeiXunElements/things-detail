@@ -6,7 +6,7 @@
 <link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 
-<link rel="import" href="../things-meta/things-menu-detail-meta-behavior.html">
+<link rel="import" href="../things-detail/things-menu-detail-create-behavior.html">
 <link rel="import" href="./things-menu-detail-master-form.html">
 <link rel="import" href="./things-menu-detail-form.html">
 <link rel="import" href="./things-menu-detail-grid.html">
@@ -74,10 +74,10 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
   </style>
 
   <template>
-    <things-ajax 
+    <!--things-ajax 
       id="meta"
       last-response="{{metaData}}">
-    </things-ajax>
+    </things-ajax-->
 
     <paper-dialog
       id='dialog' 
@@ -102,41 +102,6 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
     properties: {
       /**
-       * 다이얼로그 타이틀
-       */
-      title: {
-        type: String
-      },
-
-      /**
-       * 메뉴 정보 
-       */
-      menuInfo: {
-        type: Object
-      },
-
-      /**
-       * 디테일 리소스 
-       */
-      resource: {
-        type: Object
-      },
-
-      /**
-       * 디테일 폼 필드 
-       */
-      resourceFormFields: {
-        type: Array
-      },
-
-      /**
-      * Dialog 내에 포함될 뷰 
-      */
-      detailView: {
-        type: Object
-      },
-
-      /**
        * Dialog가 오픈된 후 콜백 
        */
       openCallback: {
@@ -145,12 +110,12 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
     },
 
     behaviors: [ 
-      Things.MenuDetailMetaBehavior 
+      Things.MenuDetailCreateBahavior
     ],
 
     listeners: {
       'dialog.iron-overlay-opened' : '_openHandler',
-      'detail-meta-data-configured' : '_createDetailView'
+      'things-detail-view-created' : '_detailViewCreated'
     },
 
     /**
@@ -172,72 +137,19 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
      * @param {Object} event
      */
     initOpener: function(event) {
-      this.menuInfo = event.detail.menuInfo;
+      this.menuInfo = null;      
+      this.menuInfo = event.detail.menuInfo; 
+      this.resource = event.detail.resource; 
       this.resourceFormFields = event.detail.resourceFormFields;
-      this.menuId = this.menuInfo.id;
-      this.resource = event.detail.resource;
-      this.title = this.resource[this.menuInfo.title_field];
-      var url = this._computeMenuDetailMetaUrl(this.menuId);
-      this.$.meta.resourceUrl = url;
-      this.$.meta.resourceId = this.menuId;
-      this.$.meta.generateRequest(); 
     },
 
     /**
-     * 메타 데이터가 구성된 이후 Detail View를 구성한다.
-     * 
+     * Detail View가 생성된 이후 ...
+     *
      * @param {Object} event
      */
-    _createDetailView: function() {
-      var viewElement = document.createElement(this.menuInfo.detail_layout);
-      viewElement.id = 'detail-view';
-      if(!this.metaData) return;
-      var children = {};
-
-      for(var i = 0 ; i < this.metaData.length ; i++) {
-        var meta = this.metaData[i];
-        var detailElement = null;
-
-        // 1. Custom View를 사용할 경우 
-        if(meta.custom_view && meta.custom_view.length > 2) {
-          detailElement = document.createElement(meta.custom_view);
-        }
-
-        // 2. Association에 따라서 ...
-        if(meta.association == 'master') {
-          detailElement = document.createElement('things-menu-detail-master-form');
-          detailElement.formFields = this.resourceFormFields;
-          detailElement.resource = this.resource;
-
-        } else if(meta.association == 'one-to-one') {
-          if(!detailElement)
-            detailElement = document.createElement('things-menu-detail-form');
-
-          detailElement.formFields = this.formMetas[meta.view_section];
-
-        } else if(meta.association == 'one-to-many') {
-          if(!detailElement)
-            detailElement = document.createElement('things-menu-detail-grid');
-
-          detailElement.gridModel = this.gridModelMetas[meta.view_section];
-          detailElement.gridColumns = this.gridColumnMetas[meta.view_section];
-        }
-
-        if(this.buttonMetas && this.buttonMetas[meta.view_section])
-          detailElement.buttons = this.buttonMetas[meta.view_section];
-
-        detailElement.id = 'view-' + meta.view_section;
-        detailElement.title = meta.name;
-        detailElement.resourceId = this.resource.id;
-        detailElement.masterField = meta.master_field;
-        detailElement.searchUrl = meta.search_url;
-        detailElement.saveUrl = meta.save_url;
-        detailElement.dataProp = meta.data_prop;
-        children[meta.view_section] = detailElement;
-      }
-
-      viewElement.sections = children;
-      this.openDetailView(viewElement, true, null);
+    _detailViewCreated: function(event) {
+      this.openDetailView(event.detail, true, null);
     },
 
     /**

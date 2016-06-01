@@ -1,0 +1,44 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="./things-menu-detail-create-behavior.html">
+
+<!--
+Menu의 Detail Meta 데이터에 정의된 대로 동적으로 생성된 화면
+-->
+
+<dom-module id="things-menu-detail-view">
+  <template>
+    <style>
+      :host {
+        display:block;
+        @apply(--layout-vertical);
+      }
+    </style>
+
+    <div id="detail-content"></div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'things-menu-detail-view',
+
+      behaviors: [ 
+        Things.MenuDetailCreateBahavior
+      ],
+
+      listeners: {
+        'things-detail-view-created' : '_detailViewCreated'
+      },
+
+      /**
+       * Detail View 생성이 완료된 후 ...
+       */
+      _detailViewCreated: function(e) {
+        var insertionPoint = this.$['detail-content'];
+        insertionPoint.appendChild(e.detail);
+      }
+
+    });
+  </script>
+</dom-module>
