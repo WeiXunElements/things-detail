@@ -71,6 +71,18 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
     button:focus {
       outline:none;
     }
+    paper-dialog::shadow .subtitle{
+      padding:10px 15px 5px 15px;
+    }
+    paper-dialog::shadow things-resource-grid{
+      padding:0 15px;
+    }
+    paper-dialog::shadow things-resource-grid::shadow .grid-container{
+      border-top:2px solid rgba(41, 135, 175, 0.55);
+    }
+    paper-dialog::shadow things-resource-grid::shadow paper-toolbar{
+      background-color:transparent;
+    }
   </style>
 
   <template>
