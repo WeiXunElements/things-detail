@@ -142,14 +142,17 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
         'grid.things-grid-handle-addrow' : '_addGridRow',
         'grid.things-grid-handle-built-writedata' : '_setupWriteData'
       },
+      
       observers: [
         'onSearchObjectsChange(resourceId,searchUrl)'
       ],
-      onSearchObjectsChange: function(resourceId, searchUrl){
-        if(this.resourceId && this.searchUrl){
+
+      onSearchObjectsChange: function(resourceId, searchUrl) {
+        if(this.resourceId && this.searchUrl) {
           this.$['grid-ajax'].generateRequest();
         }
       },
+      
       /**
        * Resize 
        *
@@ -184,8 +187,9 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        */
       _addGridRow: function(event) {
         event.preventDefault();
-        var emptyRow = {}; emptyRow[this.masterField] = this.resourceId;
-        this.$.grid.dataSet.insertRow(0, emptyRow);
+        var newRow = this.$.grid.newRowData();
+        newRow[this.masterField] = this.resourceId;
+        this.$.grid.dataSet.insertRow(0, newRow);
       },
 
       /**
@@ -208,7 +212,6 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
           });
         }
       }
-
     });
   </script>
 </dom-module>
