@@ -161,7 +161,9 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
      * @param {Object} event
      */
     _detailViewCreated: function(event) {
-      this.openDetailView(event.detail, true, null);
+      var request = event.detail;
+
+      this.openDetailView(request.view, request.modal, request.openCallback, request.closeCallback);
     },
 
     /**
@@ -171,7 +173,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
      * @param {Boolean} modal modal로 오픈할 지 여부
      * @param {Object} openCallback
      */
-    openDetailView: function(view, modal, openCallback) {
+    openDetailView: function(view, modal, openCallback, closeCallback) {
       var dialog = this.$.dialog;
       dialog.modal = modal;
       dialog.noCancelOnEscKey = false;
@@ -188,9 +190,14 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
       if(this.openCallback) {
         this.openCallback = null;
       }
+
+      if(this.closeCallback) {
+        this.closeCallback = null;
+      }
       
       this.detailView = view;
       this.openCallback = openCallback;
+      this.closeCallback = closeCallback;
       scrollable.appendChild(this.detailView);
       dialog.open();
     },

@@ -140,7 +140,16 @@ Things.MenuDetailCreateBahaviorImpl = {
     }
 
     this.menuDetailView.sections = children;
-    this.fire('things-detail-view-created', this.menuDetailView);
+    this.menuDetailView.title = this.title;
+
+    var event = {
+      view: this.menuDetailView,
+      modal: true,
+      openCallback: this.openCallback,
+      closeCallback: this.closeCallback
+    };
+
+    this.fire('things-detail-view-created', event);
   },
 
   /**

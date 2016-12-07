@@ -34,9 +34,9 @@ Menu의 Detail Meta 데이터에 정의된 대로 동적으로 생성된 화면
       /**
        * Detail View 생성이 완료된 후 ...
        */
-      _detailViewCreated: function(e) {
+      _detailViewCreated: function(event) {
         var insertionPoint = this.$['detail-content'];
-        insertionPoint.appendChild(e.detail);
+        insertionPoint.appendChild(event.detail.view);
       }
 
     });
