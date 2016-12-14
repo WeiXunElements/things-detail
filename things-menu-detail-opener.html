@@ -86,11 +86,6 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
   </style>
 
   <template>
-    <!--things-ajax 
-      id="meta"
-      last-response="{{metaData}}">
-    </things-ajax-->
-
     <paper-dialog
       id='dialog' 
       entry-animation="scale-up-animation"
@@ -162,7 +157,6 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
      */
     _detailViewCreated: function(event) {
       var request = event.detail;
-
       this.openDetailView(request.view, request.modal, request.openCallback, request.closeCallback);
     },
 
@@ -217,8 +211,6 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
         this.openCallback.apply(this.detailView);
       }
     }
-
   });
   </script>
-
 </dom-module>

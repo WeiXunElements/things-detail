@@ -12,7 +12,6 @@ window.Things = window.Things || {};
 Things.DetailTabViewBahaviorImpl = {
   
   properties: {
-
     /**
      * 폼 타이틀 
      */
@@ -70,7 +69,7 @@ Things.DetailTabViewBahaviorImpl = {
   },
 
   observers: [
-    '_onResourceChanged(resource)',
+    '_onResourceChanged(resource)'
   ],
 
   /**
@@ -118,15 +117,16 @@ Things.DetailTabViewBahaviorImpl = {
    *
    * @param {String} resourceId
    * @param {Object} resource
+   * @param {Function} openCallback
+   * @param {Function} closeCallback
    */
-  showDetailView: function(resourceId, resource) {
+  showDetailView: function(resourceId, resource, openCallback, closeCallback) {
     if(this.resourceId != resourceId) {
       this.resourceId = resourceId;
     }
 
-    this.openPopupView(this, true);
+    this.openPopupView(this, true, openCallback, closeCallback);
   }
-
 };
 
 Things.DetailTabViewBahavior = [
