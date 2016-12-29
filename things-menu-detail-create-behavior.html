@@ -67,7 +67,14 @@ Things.MenuDetailCreateBahaviorImpl = {
   _menuInfoChanged: function(menuInfo) {
     if(menuInfo) {
       this.menuId = menuInfo.id;
-      this.title = this.resource ? this.resource[menuInfo.title_field] : menuInfo.title;
+      this.title = '';
+      if(this.resource && this.resource[menuInfo.title_field] && this.resource.description) {
+        this.title = this.resource[menuInfo.title_field] + ' ( ' + this.resource.description + ' )';
+      } else if (this.resource && this.resource[menuInfo.title_field]) {
+        this.title = this.resource[menuInfo.title_field];
+      } else {
+        this.title = menuInfo.title;
+      }
       this._createLayoutView();
       this._invokeMetaData();
     }
@@ -80,8 +87,14 @@ Things.MenuDetailCreateBahaviorImpl = {
    */
   _resourceChanged: function(resource) {
     this.resource = resource;
-    if(this.resource && this.menuInfo)
+    
+    if(this.resource && this.resource[this.menuInfo.title_field] && this.resource.description) {
+      this.title = this.resource[this.menuInfo.title_field] + ' ( ' + this.resource.description + ' )';
+    } else if (this.resource && this.resource[this.menuInfo.title_field]) {
       this.title = this.resource[this.menuInfo.title_field];
+    } else {
+      this.title = this.menuInfo.title;
+    }
   },
 
   /**
