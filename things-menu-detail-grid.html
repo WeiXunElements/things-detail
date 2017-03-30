@@ -7,7 +7,7 @@
 <link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
 
 <!--
-Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 그리드 뷰 
+Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 그리드 뷰
 -->
 
 <dom-module id="things-menu-detail-grid">
@@ -30,10 +30,10 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
       resource-url="[[searchUrl]]">
     </things-ajax>
 
-    <things-resource-grid 
+    <things-resource-grid
       id="grid"
       config="[[gridConfig]]"
-      model="[[gridModel]]" 
+      model="[[gridModel]]"
       columns="[[gridColumns]]"
       grid-save-action="[[gridSaveUrl]]"
       data="[[detailItems]]"
@@ -55,6 +55,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
       properties: {
         /**
          * Resource Id
+         * @type: String
          */
         resourceId: {
           type: String
@@ -62,6 +63,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
 
         /**
          * Resource Data
+         * @type: Object
          */
         resource: {
           type: Object
@@ -69,6 +71,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
 
         /**
          * Grid Search URL
+         * @type: String
          */
         searchUrl: {
           type: String
@@ -78,6 +81,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * Grid Save URL
          * ':id'가 들어 있는지 체크하여 ':id' 값이 들어가 있으면 resourceId로 교체하여 computed된다.
          * 실제 Grid로 넘어갈 Save URL은 gridSaveUrl이다.
+         * @type: String
          */
         saveUrl: {
           type: String
@@ -85,6 +89,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
 
         /**
          * Grid Save URL
+         * @type: String
          */
         gridSaveUrl: {
           type: String,
@@ -93,6 +98,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
 
         /**
          * Master Reference Field Name
+         * @type: String
          */
         masterField: {
           type: String
@@ -100,27 +106,31 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
 
         /**
          * Data Property
+         * @type: String
          */
         dataProp: {
           type: String
-        },        
+        },
 
         /**
          * Grid Model
+         * @type: Array
          */
         gridModel: {
           type: Array
         },
-        
+
         /**
          * Grid Columns
+         * @type: Array
          */
         gridColumns: {
           type: Array
         },
 
         /**
-         * 버튼 정보 
+         * 버튼 정보
+         * @type: Array
          */
         buttons: {
           type: Array,
@@ -129,6 +139,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
 
         /**
          * Detail Data List
+         * @type: Array
          */
         detailItems: {
           type: Array,
@@ -142,7 +153,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
         'grid.things-grid-handle-addrow' : '_addGridRow',
         'grid.things-grid-handle-built-writedata' : '_setupWriteData'
       },
-      
+
       observers: [
         'onSearchObjectsChange(resourceId,searchUrl)'
       ],
@@ -152,9 +163,9 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
           this.$['grid-ajax'].generateRequest();
         }
       },
-      
+
       /**
-       * Resize 
+       * Resize
        *
        * @param {Object} e
        */
@@ -172,7 +183,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
       },
 
       /**
-       * Grid Data가 변경되었을 경우 
+       * Grid Data가 변경되었을 경우
        *
        * @param {Object} gridData
        */

@@ -8,7 +8,7 @@
 <link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
 
 <!--
-  Menu의 Detail Meta 데이터에 정의된 Mater 폼 뷰  
+  Menu의 Detail Meta 데이터에 정의된 Mater 폼 뷰
 -->
 
 <dom-module id="things-menu-detail-master-form">
@@ -32,7 +32,7 @@
       last-response="[[resource]]">
     </things-ajax>
 
-    <things-resource-form 
+    <things-resource-form
       id="form"
       title="[[title]]"
       form-fields="[[formFields]]"
@@ -57,6 +57,7 @@
       properties: {
         /**
          * Detail Title
+         * @type: String
          */
         title: {
           type: String
@@ -64,6 +65,7 @@
 
         /**
          * Resource Id
+         * @type: String
          */
         resourceId: {
           type: String
@@ -71,6 +73,7 @@
 
         /**
          * Resource Data
+         * @type: Object
          */
         resource: {
           type: Object
@@ -78,6 +81,7 @@
 
         /**
          * Form Search URL
+         * @type: String
          */
         searchUrl: {
           type: String
@@ -86,6 +90,7 @@
         /**
          * 외부에서 설정할 Form Save URL
          * ':id'가 포함되어 있으면 _computeFormSaveUrl를 통해서 '/:id'가 resourceId로 대치되면서 formSaveUrl로 설정된다.
+         * @type: String
          */
         saveUrl: {
           type: String
@@ -93,13 +98,15 @@
 
         /**
          * Form Fields
+         * @type: Array
          */
         formFields: {
           type: Array
         },
 
         /**
-         * 버튼 정보 
+         * 버튼 정보
+         * @type: Array
          */
         buttons: {
           type: Array
@@ -107,7 +114,7 @@
       },
 
       /**
-       * saveUrl이 변경되었을 경우  
+       * saveUrl이 변경되었을 경우
        *
        * @param {String} saveUrl
        */

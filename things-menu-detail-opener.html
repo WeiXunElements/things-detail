@@ -87,7 +87,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
   <template>
     <paper-dialog
-      id='dialog' 
+      id='dialog'
       entry-animation="scale-up-animation"
       exit-animation="fade-out-animation">
       <paper-toolbar>
@@ -109,14 +109,15 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
     properties: {
       /**
-       * Dialog가 오픈된 후 콜백 
+       * Dialog가 오픈된 후 콜백
+       * @type: Function
        */
       openCallback: {
         type: Function
       }
     },
 
-    behaviors: [ 
+    behaviors: [
       Things.MenuDetailCreateBahavior
     ],
 
@@ -144,9 +145,9 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
      * @param {Object} event
      */
     initOpener: function(event) {
-      this.menuInfo = null;      
-      this.menuInfo = event.detail.menuInfo; 
-      this.resource = event.detail.resource; 
+      this.menuInfo = null;
+      this.menuInfo = event.detail.menuInfo;
+      this.resource = event.detail.resource;
       this.resourceFormFields = event.detail.resourceFormFields;
     },
 
@@ -179,7 +180,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
         } catch(e) {
           console.log(e);
         }
-      } 
+      }
 
       if(this.openCallback) {
         this.openCallback = null;
@@ -188,7 +189,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
       if(this.closeCallback) {
         this.closeCallback = null;
       }
-      
+
       this.detailView = view;
       this.openCallback = openCallback;
       this.closeCallback = closeCallback;
@@ -204,7 +205,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
     },
 
     /**
-     * 다이얼로그가 오픈된 경우 핸들러 
+     * 다이얼로그가 오픈된 경우 핸들러
      */
     _openHandler: function(e) {
       if(this.openCallback) {

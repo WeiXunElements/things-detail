@@ -8,7 +8,7 @@
 <link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
 
 <!--
-  Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 폼 뷰 
+  Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 폼 뷰
 -->
 
 <dom-module id="things-menu-detail-form">
@@ -23,7 +23,7 @@
       }
     </style>
 
-    <things-resource-form 
+    <things-resource-form
       id="form"
       form-fields="[[formFields]]"
       remove-fields-on-save="[[removeFieldsOnSave]]"
@@ -47,6 +47,7 @@
       properties: {
         /**
          * Title
+         * @type: String
          */
         title: {
           type: String
@@ -54,6 +55,7 @@
 
         /**
          * Resource Id
+         * @type: String
          */
         resourceId: {
           type: String
@@ -61,13 +63,15 @@
 
         /**
          * Resource Detail
+         * @type: Object
          */
         detailData: {
           type: Object
         },
 
         /**
-         * Detail에서 Master Entity를 참조하는 필드명 
+         * Detail에서 Master Entity를 참조하는 필드명
+         * @type: String
          */
         masterField: {
           type: String
@@ -75,6 +79,7 @@
 
         /**
          * Form Search URL
+         * @type: String
          */
         searchUrl: {
           type: String
@@ -82,6 +87,7 @@
 
         /**
          * 외부에서 설정할 Form Save URL
+         * @type: String
          */
         saveUrl: {
           type: String
@@ -89,13 +95,15 @@
 
         /**
          * Form Fields
+         * @type: Array
          */
         formFields: {
           type: Array
         },
 
         /**
-         * 버튼 정보 
+         * 버튼 정보
+         * @type: Array
          */
         buttons: {
           type: Array

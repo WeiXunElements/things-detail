@@ -15,17 +15,19 @@ window.Things = window.Things || {};
  * @polymerBehavior Things.MenuDetailCreateBahavior
  */
 Things.MenuDetailCreateBahaviorImpl = {
-  
+
   properties: {
     /**
      * 다이얼로그 타이틀
+     * @type: String
      */
     title: {
       type: String
     },
 
     /**
-     * 메뉴 정보 
+     * 메뉴 정보
+     * @type: Object
      */
     menuInfo: {
       type: Object,
@@ -33,14 +35,16 @@ Things.MenuDetailCreateBahaviorImpl = {
     },
 
     /**
-     * 디테일 폼 필드 
+     * 디테일 폼 필드
+     * @type: Array
      */
     resourceFormFields: {
       type: Array
     },
 
     /**
-     * 디테일 리소스 
+     * 디테일 리소스
+     * @type: Object
      */
     resource: {
       type: Object,
@@ -48,7 +52,8 @@ Things.MenuDetailCreateBahaviorImpl = {
     },
 
     /**
-     * Menu Detail View 
+     * Menu Detail View
+     * @type: Object
      */
     menuDetailView: {
       type: Object
@@ -60,8 +65,8 @@ Things.MenuDetailCreateBahaviorImpl = {
   },
 
   /**
-   * 메뉴 정보가 변경된 후 
-   * 
+   * 메뉴 정보가 변경된 후
+   *
    * @param {Object} menuInfo
    */
   _menuInfoChanged: function(menuInfo) {
@@ -81,13 +86,13 @@ Things.MenuDetailCreateBahaviorImpl = {
   },
 
   /**
-   * resource 정보가 변경된 후 
-   * 
+   * resource 정보가 변경된 후
+   *
    * @param {Object} menuInfo
    */
   _resourceChanged: function(resource) {
     this.resource = resource;
-    
+
     if(this.resource && this.resource[this.menuInfo.title_field] && this.resource.description) {
       this.title = this.resource[this.menuInfo.title_field] + ' ( ' + this.resource.description + ' )';
     } else if (this.resource && this.resource[this.menuInfo.title_field]) {
@@ -123,7 +128,7 @@ Things.MenuDetailCreateBahaviorImpl = {
 
   /**
    * 메타 데이터가 구성된 이후 Detail View를 구성한다.
-   * 
+   *
    * @param {Object} event
    */
   _createDetailView: function(event) {
@@ -133,7 +138,7 @@ Things.MenuDetailCreateBahaviorImpl = {
       var meta = this.metaData[i];
       var sectionView = null;
 
-      // 1. Custom View를 사용할 경우 
+      // 1. Custom View를 사용할 경우
       if(meta.custom_view && meta.custom_view.length > 2) {
         sectionView = document.createElement(meta.custom_view);
       }
@@ -167,7 +172,7 @@ Things.MenuDetailCreateBahaviorImpl = {
 
   /**
    * 마스터 폼을 생성한다.
-   * 
+   *
    * @param {Object} meta
    */
   _createMasterForm: function(meta) {
@@ -180,7 +185,7 @@ Things.MenuDetailCreateBahaviorImpl = {
   /**
    * 디테일 폼을 생성한다.
    *
-   * @param {Object} sectionView 
+   * @param {Object} sectionView
    * @param {Object} meta
    */
   _createDetailForm: function(sectionView, meta) {
@@ -194,7 +199,7 @@ Things.MenuDetailCreateBahaviorImpl = {
   /**
    * 디테일 그리드를 생성한다.
    *
-   * @param {Object} sectionView 
+   * @param {Object} sectionView
    * @param {Object} meta
    */
   _createDetailGrid: function(sectionView, meta) {
@@ -209,13 +214,13 @@ Things.MenuDetailCreateBahaviorImpl = {
   /**
    * 마스터 폼, 디테일 폼, 그리드 공통 셋업을 설정한다.
    *
-   * @param {Object} sectionView 
+   * @param {Object} sectionView
    * @param {Object} meta
    */
   _setCommonDetailView: function(sectionView, meta) {
-    if(this.resource) 
+    if(this.resource)
       sectionView.resourceId = this.resource.id;
-          
+
     sectionView.id = 'view-' + meta.view_section;
     sectionView.title = meta.name;
     sectionView.masterField = meta.master_field;

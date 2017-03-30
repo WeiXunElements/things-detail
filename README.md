@@ -1,6 +1,6 @@
 # things-detail
 
-An element providing a starting point for your own reusable Polymer elements.
+#### Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 폼 뷰.
 
 
 ## Dependencies

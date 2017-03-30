@@ -4,7 +4,7 @@
   "authors": [
     "Hatio Lab. <heartyoh@hatiolab.com>"
   ],
-  "description": "An element providing Things Detail.",
+  "description": "Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 폼 뷰",
   "keywords": [
     "web-component",
     "polymer",
