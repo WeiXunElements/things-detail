@@ -14,7 +14,8 @@ Things.DetailTabViewBahaviorImpl = {
   properties: {
     /**
      * 폼 타이틀
-     * @type: String
+     * *******
+     * @type {String}
      */
     title: {
       type: String
@@ -22,7 +23,8 @@ Things.DetailTabViewBahaviorImpl = {
 
     /**
      * resource type
-     * @type: String
+     * ********
+     * @type {String}
      */
     resourceType: {
       type: String
@@ -31,7 +33,8 @@ Things.DetailTabViewBahaviorImpl = {
     /**
      * resource 대표 url
      * User Resource라면 users
-     * @type: String
+     * *******
+     * @type {String}
      */
     resourceUrl: {
       type: String
@@ -39,7 +42,8 @@ Things.DetailTabViewBahaviorImpl = {
 
     /**
      * resource id
-     * @type: String
+     * *********
+     * @type {String}
      */
     resourceId: {
       type: String
@@ -48,7 +52,8 @@ Things.DetailTabViewBahaviorImpl = {
     /**
      * 폼에 채우기 위한 리소스
      * 최초 폼이 실행되는 시점에 서버에 요청하여 리턴받은 데이터
-     * @type: Object
+     * ******
+     * @type {Object}
      */
     resource: {
       type: Object
@@ -56,7 +61,8 @@ Things.DetailTabViewBahaviorImpl = {
 
     /**
      * 현재 선택된 탭 index
-     * @type: Number
+     * ******
+     * @type {Number}
      */
     currentTabIdx: {
       type: Number,
@@ -65,7 +71,8 @@ Things.DetailTabViewBahaviorImpl = {
 
     /**
      * 탭에 포함될 패널들
-     * @type: Array
+     * *******
+     * @type {Array}
      */
     _panels: {
       type: Array,
@@ -81,6 +88,7 @@ Things.DetailTabViewBahaviorImpl = {
 
   /**
    * Life Cycle - Ready
+   * *******
    */
   ready: function() {
     var tabPages = this.$$('#tabPages');
@@ -112,7 +120,7 @@ Things.DetailTabViewBahaviorImpl = {
 
   /**
    * Active Tab을 설정한다.
-   *
+   *********
    * @param {Number} currentTabIdx
    */
   setActiveTab: function(currentTabIdx) {
@@ -121,7 +129,7 @@ Things.DetailTabViewBahaviorImpl = {
 
   /**
    * Detail 화면을 오픈한다.
-   *
+   *********
    * @param {String} resourceId
    * @param {Object} resource
    * @param {Function} openCallback

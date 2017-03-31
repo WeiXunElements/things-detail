@@ -110,7 +110,8 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
     properties: {
       /**
        * Dialog가 오픈된 후 콜백
-       * @type: Function
+       * *******
+       * @type {Function}
        */
       openCallback: {
         type: Function
@@ -128,6 +129,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
     /**
      * Life Cycle
+     * *******
      */
     attached: function () {
       document.addEventListener('things-open-menu-detail-view', function(event) {
@@ -141,7 +143,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
     /**
      * Initialize Opener
-     *
+     ********
      * @param {Object} event
      */
     initOpener: function(event) {
@@ -163,7 +165,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
     /**
      * View를 기본적인 다이얼로그 내에 오픈한다.
-     *
+     *******
      * @param {Object} view 오픈할 view
      * @param {Boolean} modal modal로 오픈할 지 여부
      * @param {Object} openCallback
@@ -199,6 +201,7 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
 
     /**
      * View를 기본적인 다이얼로그 내에 닫는다.
+     * *******
      */
     closeDetailView: function() {
       this.$.dialog.close();
