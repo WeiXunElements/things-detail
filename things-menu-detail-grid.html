@@ -98,7 +98,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          */
         gridSaveUrl: {
           type: String,
-          computed: '_computeGridSaveUrl(saveUrl)'
+          computed: '_computeGridSaveUrl(resourceId, saveUrl)'
         },
 
         /**
@@ -189,7 +189,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        *
        * @param {String} saveUrl
        */
-      _computeGridSaveUrl: function(saveUrl) {
+      _computeGridSaveUrl: function(resourceId, saveUrl) {
         return saveUrl.replace(':id', this.resourceId);
       },
 
