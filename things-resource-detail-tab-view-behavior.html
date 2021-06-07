@@ -1,90 +1,86 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../things-meta/things-detail-form-meta-behavior.html">
+<link rel="import" href="../things-meta/things-detail-form-meta-behavior.html" />
 
-<link rel="import" href="./things-detail-tab-view-behavior.html">
+<link rel="import" href="./things-detail-tab-view-behavior.html" />
 
 <script>
-
-window.Things = window.Things || {};
-
-/**
- * 그리드에서 선택한 레코드에 대한 상세 뷰의 Behavior를 정의.
- * 상세 뷰는 ResourceForm이 반드시 Tabs에 포함되어 있다고 가정한다.
- *
- * @polymerBehavior Things.ResourceDetailTabViewBahavior
- */
-Things.ResourceDetailTabViewBahaviorImpl = {
-
-  properties: {
-
-   /**
-    * en-us
-    *
-    * meta data for detail form
-    *
-    *
-    * ko-kr
-    *
-    * 세부 양식을 위한 meta data
-    * ******
-    * @type {Array}
-    */
-    metaData: {
-      type: Array,
-      observer: '_parseMetaData'
-    },
-
-   /**
-    * en-us
-    *
-    * active attachment panel
-    *
-    * ko-kr
-    *
-    * 활성 첨부 panel
-    * @type {Boolean}
-    * *******
-    */
-    attachable: {
-      type: Boolean,
-      value: false
-    },
-
-   /**
-    * en-us
-    *
-    * active extension properties panel
-    *
-    * ko-kr
-    *
-    * 화렁 확장 속성 panel
-    * *******
-    * @type {Boolean}
-    */
-    propExtensible: {
-      type: Boolean,
-      Value: false
-    }
-  },
+  window.Things = window.Things || {};
 
   /**
-  * meta data를 파싱한다.
-  *
-  * @param {Array} metaDataList
-  */
-  _parseMetaData: function(metaDataList) {
-    if(!metaDataList || metaDataList.length == 0) return;
-    this.formFields = this._parseResourceFormFields(metaDataList);
-  }
-};
+   * 그리드에서 선택한 레코드에 대한 상세 뷰의 Behavior를 정의.
+   * 상세 뷰는 ResourceForm이 반드시 Tabs에 포함되어 있다고 가정한다.
+   *
+   * @polymerBehavior Things.ResourceDetailTabViewBahavior
+   */
+  Things.ResourceDetailTabViewBahaviorImpl = {
+    properties: {
+      /**
+       * en-us
+       *
+       * meta data for detail form
+       *
+       *
+       * ko-kr
+       *
+       * 세부 양식을 위한 meta data
+       * ******
+       * @type {Array}
+       */
+      metaData: {
+        type: Array,
+        observer: '_parseMetaData',
+      },
 
-Things.ResourceDetailTabViewBahavior = [
-  Things.ResourceDetailTabViewBahaviorImpl,
-  Things.DetailTabViewBahavior,
-  Things.DetailFormMetaBehavior
-]
+      /**
+       * en-us
+       *
+       * active attachment panel
+       *
+       * ko-kr
+       *
+       * 활성 첨부 panel
+       * @type {Boolean}
+       * *******
+       */
+      attachable: {
+        type: Boolean,
+        value: false,
+      },
 
+      /**
+       * en-us
+       *
+       * active extension properties panel
+       *
+       * ko-kr
+       *
+       * 화렁 확장 속성 panel
+       * *******
+       * @type {Boolean}
+       */
+      propExtensible: {
+        type: Boolean,
+        Value: false,
+      },
+    },
+
+    /**
+     * meta data를 파싱한다.
+     *
+     * @param {Array} metaDataList
+     */
+    _parseMetaData: function (metaDataList) {
+      if (!metaDataList || metaDataList.length == 0) return;
+      this.formFields = this._parseResourceFormFields(metaDataList);
+    },
+  };
+
+  Things.ResourceDetailTabViewBahavior = [
+    Things.ResourceDetailTabViewBahaviorImpl,
+    Things.DetailTabViewBahavior,
+    Things.DetailFormMetaBehavior,
+  ];
 </script>

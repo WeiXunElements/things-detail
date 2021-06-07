@@ -1,15 +1,15 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icon/iron-icon.html" />
 
-<link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-form/things-resource-form.html">
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../things-resource-selector/things-resource-selector-behavior.html">
-<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
+<link rel="import" href="../things-ajax/things-ajax.html" />
+<link rel="import" href="../things-form/things-resource-form.html" />
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html" />
+<link rel="import" href="../things-resource-selector/things-resource-selector-behavior.html" />
+<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html" />
 
 <!--
   Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:1 관계에 대한 폼 뷰
@@ -19,11 +19,11 @@ Copyright © HatioLab Inc. All rights reserved.
   <template>
     <style>
       :host {
-        display:block;
-        @apply(--layout-vertical);
+        display: block;
+        @apply (--layout-vertical);
       }
       things-resource-form {
-        @apply(--layout-flex);
+        @apply (--layout-flex);
       }
     </style>
 
@@ -33,20 +33,16 @@ Copyright © HatioLab Inc. All rights reserved.
       remove-fields-on-save="[[removeFieldsOnSave]]"
       resource-id="[[resourceId]]"
       resource="[[detailData]]"
-      resource-url="[[saveUrl]]">
+      resource-url="[[saveUrl]]"
+    >
     </things-resource-form>
   </template>
 
   <script>
     Polymer({
-
       is: 'things-menu-detail-form',
 
-      behaviors: [
-        Things.ResourceSelectorBehavior,
-        Things.MsgBoxBehavior,
-        Things.ViewOpenBehavior
-      ],
+      behaviors: [Things.ResourceSelectorBehavior, Things.MsgBoxBehavior, Things.ViewOpenBehavior],
 
       properties: {
         /**
@@ -55,7 +51,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         title: {
-          type: String
+          type: String,
         },
 
         /**
@@ -64,7 +60,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         resourceId: {
-          type: String
+          type: String,
         },
 
         /**
@@ -73,7 +69,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {Object}
          */
         detailData: {
-          type: Object
+          type: Object,
         },
 
         /**
@@ -82,7 +78,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         masterField: {
-          type: String
+          type: String,
         },
 
         /**
@@ -91,7 +87,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         searchUrl: {
-          type: String
+          type: String,
         },
 
         /**
@@ -100,7 +96,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {String}
          */
         saveUrl: {
-          type: String
+          type: String,
         },
 
         /**
@@ -109,7 +105,7 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {Array}
          */
         formFields: {
-          type: Array
+          type: Array,
         },
 
         /**
@@ -118,13 +114,13 @@ Copyright © HatioLab Inc. All rights reserved.
          * @type {Array}
          */
         buttons: {
-          type: Array
-        }
+          type: Array,
+        },
       },
 
       listeners: {
-        'form.things-form-handle-url-before-save' : '_beforeSaveDetail',
-        'form.things-form-handle-url-before-get' : '_beforeGetDetail'
+        'form.things-form-handle-url-before-save': '_beforeSaveDetail',
+        'form.things-form-handle-url-before-get': '_beforeGetDetail',
       },
 
       /**
@@ -132,7 +128,7 @@ Copyright © HatioLab Inc. All rights reserved.
        *
        * @param {Object} event
        */
-      _beforeGetDetail: function(event) {
+      _beforeGetDetail: function (event) {
         event.preventDefault();
 
         var getAjax = event.detail;
@@ -146,14 +142,14 @@ Copyright © HatioLab Inc. All rights reserved.
        *
        * @param {Object} event
        */
-      _beforeSaveDetail: function(event) {
+      _beforeSaveDetail: function (event) {
         event.preventDefault();
 
         var saveAjax = event.detail;
         saveAjax.resourceId = this.resourceId;
         saveAjax.resourceUrl = this.saveUrl;
         saveAjax.resourceAction = 'update';
-      }
+      },
     });
   </script>
 </dom-module>

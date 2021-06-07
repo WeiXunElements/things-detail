@@ -1,10 +1,10 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer.html" />
 
-<link rel="import" href="./things-menu-detail-create-behavior.html">
+<link rel="import" href="./things-menu-detail-create-behavior.html" />
 
 <!--
 Menu의 Detail Meta 데이터에 정의된 대로 동적으로 생성된 화면
@@ -14,8 +14,8 @@ Menu의 Detail Meta 데이터에 정의된 대로 동적으로 생성된 화면
   <template>
     <style>
       :host {
-        display:block;
-        @apply(--layout-vertical);
+        display: block;
+        @apply (--layout-vertical);
       }
     </style>
 
@@ -24,15 +24,12 @@ Menu의 Detail Meta 데이터에 정의된 대로 동적으로 생성된 화면
 
   <script>
     Polymer({
-
       is: 'things-menu-detail-view',
 
-      behaviors: [
-        Things.MenuDetailCreateBahavior
-      ],
+      behaviors: [Things.MenuDetailCreateBahavior],
 
       listeners: {
-        'things-detail-view-created' : '_detailViewCreated'
+        'things-detail-view-created': '_detailViewCreated',
       },
 
       /**
@@ -40,10 +37,10 @@ Menu의 Detail Meta 데이터에 정의된 대로 동적으로 생성된 화면
        *
        * @param {Object} event
        */
-      _detailViewCreated: function(event) {
+      _detailViewCreated: function (event) {
         var insertionPoint = this.$['detail-content'];
         insertionPoint.appendChild(event.detail.view);
-      }
+      },
     });
   </script>
 </dom-module>

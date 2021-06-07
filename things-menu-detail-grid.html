@@ -1,14 +1,14 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icon/iron-icon.html" />
 
-<link rel="import" href="../things-ajax/things-ajax.html">
-<link rel="import" href="../things-grid/things-resource-grid.html">
-<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html">
-<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html">
+<link rel="import" href="../things-ajax/things-ajax.html" />
+<link rel="import" href="../things-grid/things-resource-grid.html" />
+<link rel="import" href="../things-msg-box-behavior/things-msg-box-behavior.html" />
+<link rel="import" href="../things-view-open-behavior/things-view-open-behavior.html" />
 
 <!--
 Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 그리드 뷰
@@ -18,21 +18,16 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
   <template>
     <style>
       :host {
-        display:block;
-        @apply(--layout-vertical);
-        @apply(--layout-flex);
+        display: block;
+        @apply (--layout-vertical);
+        @apply (--layout-flex);
       }
       things-resource-grid {
-        @apply(--layout-flex);
+        @apply (--layout-flex);
       }
     </style>
 
-    <things-ajax
-      id="grid-ajax"
-      method="GET"
-      resource-id="[[resourceId]]"
-      resource-url="[[searchUrl]]">
-    </things-ajax>
+    <things-ajax id="grid-ajax" method="GET" resource-id="[[resourceId]]" resource-url="[[searchUrl]]"> </things-ajax>
 
     <things-resource-grid
       id="grid"
@@ -42,19 +37,16 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
       grid-save-action="[[gridSaveUrl]]"
       data="[[detailItems]]"
       fixed-column-count="2"
-      buttons="[[buttons]]">
+      buttons="[[buttons]]"
+    >
     </things-resource-grid>
   </template>
 
   <script>
     Polymer({
-
       is: 'things-menu-detail-grid',
 
-      behaviors: [
-        Things.MsgBoxBehavior,
-        Things.ViewOpenBehavior
-      ],
+      behaviors: [Things.MsgBoxBehavior, Things.ViewOpenBehavior],
 
       properties: {
         /**
@@ -63,7 +55,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {String}
          */
         resourceId: {
-          type: String
+          type: String,
         },
 
         /**
@@ -72,7 +64,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {Object}
          */
         resource: {
-          type: Object
+          type: Object,
         },
 
         /**
@@ -81,7 +73,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {String}
          */
         searchUrl: {
-          type: String
+          type: String,
         },
 
         /**
@@ -92,7 +84,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {String}
          */
         saveUrl: {
-          type: String
+          type: String,
         },
 
         /**
@@ -102,7 +94,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          */
         gridSaveUrl: {
           type: String,
-          computed: '_computeGridSaveUrl(resourceId, saveUrl)'
+          computed: '_computeGridSaveUrl(resourceId, saveUrl)',
         },
 
         /**
@@ -111,7 +103,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {String}
          */
         masterField: {
-          type: String
+          type: String,
         },
 
         /**
@@ -120,7 +112,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {String}
          */
         dataProp: {
-          type: String
+          type: String,
         },
 
         /**
@@ -129,7 +121,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {Array}
          */
         gridModel: {
-          type: Array
+          type: Array,
         },
 
         /**
@@ -138,7 +130,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          * @type {Array}
          */
         gridColumns: {
-          type: Array
+          type: Array,
         },
 
         /**
@@ -148,7 +140,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          */
         buttons: {
           type: Array,
-          value: []
+          value: [],
         },
 
         /**
@@ -158,23 +150,21 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
          */
         detailItems: {
           type: Array,
-          notify: true
-        }
+          notify: true,
+        },
       },
 
       listeners: {
-        'grid-ajax.things-ajax-response' : '_responseDetails',
-        'grid.things-grid-save-success' : '_responseDetails',
-        'grid.things-grid-handle-addrow' : '_addGridRow',
-        'grid.things-grid-handle-built-writedata' : '_setupWriteData'
+        'grid-ajax.things-ajax-response': '_responseDetails',
+        'grid.things-grid-save-success': '_responseDetails',
+        'grid.things-grid-handle-addrow': '_addGridRow',
+        'grid.things-grid-handle-built-writedata': '_setupWriteData',
       },
 
-      observers: [
-        'onSearchObjectsChange(resourceId,searchUrl)'
-      ],
+      observers: ['onSearchObjectsChange(resourceId,searchUrl)'],
 
-      onSearchObjectsChange: function(resourceId, searchUrl) {
-        if(this.resourceId && this.searchUrl) {
+      onSearchObjectsChange: function (resourceId, searchUrl) {
+        if (this.resourceId && this.searchUrl) {
           this.$['grid-ajax'].generateRequest();
         }
       },
@@ -184,7 +174,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        *
        * @param {Object} e
        */
-      _resizeView: function(e) {
+      _resizeView: function (e) {
         this.$.grid.resizeGrid();
       },
 
@@ -193,7 +183,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        *
        * @param {String} saveUrl
        */
-      _computeGridSaveUrl: function(resourceId, saveUrl) {
+      _computeGridSaveUrl: function (resourceId, saveUrl) {
         return saveUrl.replace(':id', this.resourceId);
       },
 
@@ -202,7 +192,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        *
        * @param {Object} gridData
        */
-      _responseDetails: function(e) {
+      _responseDetails: function (e) {
         this.detailItems = e.detail;
       },
 
@@ -211,7 +201,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        *
        * @param {Object} event
        */
-      _addGridRow: function(event) {
+      _addGridRow: function (event) {
         event.preventDefault();
         var newRow = this.$.grid.newRowData();
         newRow[this.masterField] = this.resourceId;
@@ -223,13 +213,13 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
        *
        * @param {Object} event
        */
-      _setupWriteData: function(event) {
+      _setupWriteData: function (event) {
         var writeData = event.detail;
-        if(writeData && writeData.length > 0) {
+        if (writeData && writeData.length > 0) {
           var masterId = this.resourceId;
           var masterField = this.masterField;
 
-          writeData.forEach(function(changedData) {
+          writeData.forEach(function (changedData) {
             changedData[masterField] = masterId;
             delete changedData['creator'];
             delete changedData['updater'];
@@ -237,7 +227,7 @@ Menu의 Detail Meta 데이터에 정의된 Mater - Detail 1:N 관계에 대한 �
             delete changedData['updated_at'];
           });
         }
-      }
+      },
     });
   </script>
 </dom-module>

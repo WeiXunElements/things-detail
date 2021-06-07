@@ -1,19 +1,19 @@
 <!--
 @license
-Copyright © HatioLab Inc. All rights reserved.
+Copyright © 2015-2021 Shenzhen Weixun All rights reserved.
 -->
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
-<link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
-<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../neon-animation/animations/scale-up-animation.html" />
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html" />
+<link rel="import" href="../paper-dialog/paper-dialog.html" />
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html" />
+<link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html" />
+<link rel="import" href="../paper-toolbar/paper-toolbar.html" />
 
-<link rel="import" href="../things-detail/things-menu-detail-create-behavior.html">
-<link rel="import" href="./things-menu-detail-master-form.html">
-<link rel="import" href="./things-menu-detail-form.html">
-<link rel="import" href="./things-menu-detail-grid.html">
+<link rel="import" href="../things-detail/things-menu-detail-create-behavior.html" />
+<link rel="import" href="./things-menu-detail-master-form.html" />
+<link rel="import" href="./things-menu-detail-form.html" />
+<link rel="import" href="./things-menu-detail-grid.html" />
 
 <!--
 Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Manager를 이용하여 표시하는 Opener.
@@ -26,17 +26,17 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
   <style>
     :host {
       display: inline-block;
-      @apply(--layout-vertical)
+      @apply (--layout-vertical);
     }
     paper-toolbar {
-      background-color:var(--things-primary-background-color);
+      background-color: var(--things-primary-background-color);
       height: 45px;
       margin-top: 0px !important;
-      @apply(--things-padding-clear)
+      @apply (--things-padding-clear);
     }
     paper-toolbar::shadow #topBar {
-      height:45px;
-      @apply(--things-padding-clear)
+      height: 45px;
+      @apply (--things-padding-clear);
     }
     paper-dialog {
       position: fixed;
@@ -45,180 +45,179 @@ Menu의 Detail Meta 데이터로 정의된 Resource Detail 정보를 Layout Mana
       left: 15%;
       right: 15%;
       margin: 0px;
-      @apply(--layout-flex);
-      @apply(--layout-vertical);
+      @apply (--layout-flex);
+      @apply (--layout-vertical);
     }
     .buttonsGroup {
-      @apply(--layout-horizontal);
-      @apply(--layout-end-justified);
-      @apply(--layout-flex);
+      @apply (--layout-horizontal);
+      @apply (--layout-end-justified);
+      @apply (--layout-flex);
     }
     .scrollroot {
-      @apply(--layout-flex);
-      @apply(--layout-vertical);
-      @apply(--things-padding-clear);
-      @apply(--things-margin-clear);
+      @apply (--layout-flex);
+      @apply (--layout-vertical);
+      @apply (--things-padding-clear);
+      @apply (--things-margin-clear);
     }
     .scrollroot::content #detail-view {
-      @apply(--layout-flex);
+      @apply (--layout-flex);
     }
     .title {
-      margin-left:20px !important;
-      font-size:20px;
-      font-weight:400;
+      margin-left: 20px !important;
+      font-size: 20px;
+      font-weight: 400;
     }
     .close-btn {
-      @apply(--things-header-button);
+      @apply (--things-header-button);
       background: url(/images/icon-close.png) 100% 50% no-repeat;
       margin-right: 10px;
     }
     button:focus {
-      outline:none;
+      outline: none;
     }
-    paper-dialog::shadow .subtitle{
-      padding:10px 15px 5px 15px;
+    paper-dialog::shadow .subtitle {
+      padding: 10px 15px 5px 15px;
     }
-    paper-dialog::shadow things-resource-grid{
-      padding:0 15px;
+    paper-dialog::shadow things-resource-grid {
+      padding: 0 15px;
     }
-    paper-dialog::shadow things-resource-grid::shadow .grid-container{
-      border-top:2px solid rgba(41, 135, 175, 0.55);
+    paper-dialog::shadow things-resource-grid::shadow .grid-container {
+      border-top: 2px solid rgba(41, 135, 175, 0.55);
     }
-    paper-dialog::shadow things-resource-grid::shadow paper-toolbar{
-      background-color:transparent;
+    paper-dialog::shadow things-resource-grid::shadow paper-toolbar {
+      background-color: transparent;
     }
   </style>
 
   <template>
-    <paper-dialog
-      id='dialog'
-      entry-animation="scale-up-animation"
-      exit-animation="fade-out-animation">
+    <paper-dialog id="dialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <paper-toolbar>
         <span class="title">[[title]]</span>
         <div class="buttonsGroup">
-            <button dialog-dismiss class="close-btn"></button>
+          <button dialog-dismiss class="close-btn"></button>
         </div>
       </paper-toolbar>
 
-      <div id="scrollroot" class="scrollroot">
-      </div>
+      <div id="scrollroot" class="scrollroot"></div>
     </paper-dialog>
   </template>
 
   <script>
-  Polymer({
+    Polymer({
+      is: 'things-resource-detail-opener',
 
-    is: 'things-resource-detail-opener',
+      properties: {
+        /**
+         * Dialog가 오픈된 후 콜백
+         * *******
+         * @type {Function}
+         */
+        openCallback: {
+          type: Function,
+        },
+      },
 
-    properties: {
+      behaviors: [Things.MenuDetailCreateBahavior],
+
+      listeners: {
+        'dialog.iron-overlay-opened': '_openHandler',
+        'things-detail-view-created': '_detailViewCreated',
+      },
+
       /**
-       * Dialog가 오픈된 후 콜백
+       * Life Cycle
        * *******
-       * @type {Function}
        */
-      openCallback: {
-        type: Function
-      }
-    },
+      attached: function () {
+        document.addEventListener(
+          'things-open-menu-detail-view',
+          function (event) {
+            this.initOpener(event);
+          }.bind(this)
+        );
 
-    behaviors: [
-      Things.MenuDetailCreateBahavior
-    ],
+        document.addEventListener(
+          'things-close-menu-detail-view',
+          function (event) {
+            this.closeDetailView();
+          }.bind(this)
+        );
+      },
 
-    listeners: {
-      'dialog.iron-overlay-opened' : '_openHandler',
-      'things-detail-view-created' : '_detailViewCreated'
-    },
+      /**
+       * Initialize Opener
+       ********
+       * @param {Object} event
+       */
+      initOpener: function (event) {
+        this.menuInfo = null;
+        this.menuInfo = event.detail.menuInfo;
+        this.resource = event.detail.resource;
+        this.resourceFormFields = event.detail.resourceFormFields;
+      },
 
-    /**
-     * Life Cycle
-     * *******
-     */
-    attached: function () {
-      document.addEventListener('things-open-menu-detail-view', function(event) {
-        this.initOpener(event);
-      }.bind(this));
+      /**
+       * Detail View가 생성된 이후 ...
+       *
+       * @param {Object} event
+       */
+      _detailViewCreated: function (event) {
+        var request = event.detail;
+        this.openDetailView(request.view, request.modal, request.openCallback, request.closeCallback);
+      },
 
-      document.addEventListener('things-close-menu-detail-view', function(event) {
-        this.closeDetailView();
-      }.bind(this));
-    },
+      /**
+       * View를 기본적인 다이얼로그 내에 오픈한다.
+       *******
+       * @param {Object} view 오픈할 view
+       * @param {Boolean} modal modal로 오픈할 지 여부
+       * @param {Object} openCallback
+       */
+      openDetailView: function (view, modal, openCallback, closeCallback) {
+        var dialog = this.$.dialog;
+        dialog.modal = modal;
+        dialog.noCancelOnEscKey = false;
+        var scrollable = this.$.scrollroot;
 
-    /**
-     * Initialize Opener
-     ********
-     * @param {Object} event
-     */
-    initOpener: function(event) {
-      this.menuInfo = null;
-      this.menuInfo = event.detail.menuInfo;
-      this.resource = event.detail.resource;
-      this.resourceFormFields = event.detail.resourceFormFields;
-    },
-
-    /**
-     * Detail View가 생성된 이후 ...
-     *
-     * @param {Object} event
-     */
-    _detailViewCreated: function(event) {
-      var request = event.detail;
-      this.openDetailView(request.view, request.modal, request.openCallback, request.closeCallback);
-    },
-
-    /**
-     * View를 기본적인 다이얼로그 내에 오픈한다.
-     *******
-     * @param {Object} view 오픈할 view
-     * @param {Boolean} modal modal로 오픈할 지 여부
-     * @param {Object} openCallback
-     */
-    openDetailView: function(view, modal, openCallback, closeCallback) {
-      var dialog = this.$.dialog;
-      dialog.modal = modal;
-      dialog.noCancelOnEscKey = false;
-      var scrollable = this.$.scrollroot;
-
-      if(this.detailView) {
-        try {
-          scrollable.removeChild(this.detailView);
-        } catch(e) {
-          console.log(e);
+        if (this.detailView) {
+          try {
+            scrollable.removeChild(this.detailView);
+          } catch (e) {
+            console.log(e);
+          }
         }
-      }
 
-      if(this.openCallback) {
-        this.openCallback = null;
-      }
+        if (this.openCallback) {
+          this.openCallback = null;
+        }
 
-      if(this.closeCallback) {
-        this.closeCallback = null;
-      }
+        if (this.closeCallback) {
+          this.closeCallback = null;
+        }
 
-      this.detailView = view;
-      this.openCallback = openCallback;
-      this.closeCallback = closeCallback;
-      scrollable.appendChild(this.detailView);
-      dialog.open();
-    },
+        this.detailView = view;
+        this.openCallback = openCallback;
+        this.closeCallback = closeCallback;
+        scrollable.appendChild(this.detailView);
+        dialog.open();
+      },
 
-    /**
-     * View를 기본적인 다이얼로그 내에 닫는다.
-     * *******
-     */
-    closeDetailView: function() {
-      this.$.dialog.close();
-    },
+      /**
+       * View를 기본적인 다이얼로그 내에 닫는다.
+       * *******
+       */
+      closeDetailView: function () {
+        this.$.dialog.close();
+      },
 
-    /**
-     * 다이얼로그가 오픈된 경우 핸들러
-     */
-    _openHandler: function(e) {
-      if(this.openCallback) {
-        this.openCallback.apply(this.detailView);
-      }
-    }
-  });
+      /**
+       * 다이얼로그가 오픈된 경우 핸들러
+       */
+      _openHandler: function (e) {
+        if (this.openCallback) {
+          this.openCallback.apply(this.detailView);
+        }
+      },
+    });
   </script>
 </dom-module>
